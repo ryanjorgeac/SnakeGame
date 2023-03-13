@@ -3,9 +3,9 @@ import pygame
 
 class snake:
     def __init__(self, body_parts: list[tuple], size: tuple, color: tuple):
-        self.body = body_parts  # [(300, 300), (310, 300), (320, 300)]
-        self.size = pygame.Surface(size)  # (10, 10)
-        self.color = color  # (255, 255, 255)
+        self.body = body_parts
+        self.size = pygame.Surface(size)
+        self.color = color
         self.size.fill(self.color)
         self.direction = None
         self.score = 0
@@ -40,6 +40,7 @@ class snake:
 
     def scored(self):
         self.score += 1
+
 
 def make_snake(body, size, color):
     return snake(body, size, color)
