@@ -56,7 +56,7 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
             a_snake.grow((0, 0))
             a_snake.scored()
 
-        score_render(a_screen, a_snake.score)
+        # score_render(a_screen, a_snake.score)
 
         if check_edges(a_snake) or a_snake.collided():
             game_over = True
@@ -77,21 +77,35 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
         a_screen.fill(black_color)
         a_screen.blit(a_apple.size, a_apple.position)
 
+        score_render(a_screen, a_snake.score)
+
         for position in a_snake.body:
             a_screen.blit(a_snake.size, position)
 
         pygame.display.update()
 
+    game_over_screen(a_screen)
 
-def game_over_screen():
-    pass
+def game_over_screen(a_screen):
+    game_over_font = pygame.font.Font('freesansbold.ttf', 75)
+    game_over_rendered = game_over_font.render('Game Over', True, (255, 255, 255))
+    game_over_rect = game_over_rendered.get_rect()
+    game_over_rect.center = (600 / 2, 10)
+    a_screen.blit(game_over_rendered, game_over_rect)
+    pygame.display.update()
+    pygame.time.wait(500)
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
 
 
 def score_render(screen, score: int):
-    score_font = pygame.font.SysFont('arial', 75)
+    score_font = pygame.font.SysFont('arial', 18)
     score_rendered = score_font.render(f'Score: {score}', True, (255, 255, 255))
     score_rect = score_rendered.get_rect()
-    score_rect.topleft = (600 - 120, 10)
+    score_rect.center = (600/2, 20)
     screen.blit(score_rendered, score_rect)
 
 

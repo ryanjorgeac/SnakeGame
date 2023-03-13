@@ -9,8 +9,8 @@ class apple:
         self.position = self.new_position()
 
     def new_position(self):
-        x = random.randint(0, 590)
-        y = random.randint(0, 590)
+        x = random.randint(10, 580)
+        y = random.randint(10, 580)
         return x // 10 * 10, y // 10 * 10
 
     def change_position(self):
