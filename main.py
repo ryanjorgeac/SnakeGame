@@ -26,12 +26,41 @@ def main():
     game_snake = snake.default_snake
     game_clock = pygame.time.Clock()
     game_apple = apple.default_apple
+    start_menu(game_screen)
     run(game_screen, game_snake, game_apple, game_clock)
 
 
+def start_menu(a_screen):
+    a_screen.fill((0, 0, 0))
+    screen_width = a_screen.get_width()
+    screen_height = a_screen.get_height()
+    title_font = pygame.font.Font('./Fonts/Cocogoose Pro Light-trial.ttf', 50)
+    title = title_font.render('>> Snake Game <<', True, (255, 255, 255))
+    start_font = pygame.font.Font('./Fonts/Cocogoose Pro Light-trial.ttf', 30)
+    start_button = start_font.render('(Press Space to start)', True, (255, 255, 255))
+
+    to_game = False
+    while not to_game:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+
+            elif pygame.key.get_pressed()[pygame.K_SPACE]:
+                to_game = True
+                break
+
+            elif event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    to_game = True
+                    break
+
+        a_screen.blit(title, (screen_width / 2 - title.get_width() / 2, screen_height / 2 - title.get_height()))
+        a_screen.blit(start_button, (screen_width / 2 - start_button.get_width() / 2, screen_height / 2 + start_button.get_height() / 4))
+        pygame.display.update()
+
+
 def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
-    game_over = False
-    while not game_over:
+    while True:
         clock.tick(20)
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -50,16 +79,16 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
                 elif event.key == K_RIGHT or event.key == K_d:
                     if a_snake.direction != LEFT:
                         a_snake.change_direction(RIGHT)
+                elif event.key == K_ESCAPE:
+                    pass
+                    # pause_screen()
 
         if ate(a_snake.head(), a_apple.position):
             a_apple.change_position()
             a_snake.grow((0, 0))
             a_snake.scored()
 
-        # score_render(a_screen, a_snake.score)
-
         if check_edges(a_snake) or a_snake.collided():
-            game_over = True
             break
 
         if a_snake.direction == UP:
@@ -86,26 +115,36 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
 
     game_over_screen(a_screen)
 
+
 def game_over_screen(a_screen):
-    game_over_font = pygame.font.Font('freesansbold.ttf', 75)
-    game_over_rendered = game_over_font.render('Game Over', True, (255, 255, 255))
-    game_over_rect = game_over_rendered.get_rect()
-    game_over_rect.center = (600 / 2, 10)
-    a_screen.blit(game_over_rendered, game_over_rect)
+    a_screen.fill((0, 0, 0))
+    font = pygame.font.Font('./Fonts/Cocogoose Pro Light-trial.ttf', 70)
+    title = font.render('Game Over', True, (255, 255, 255))
+    r_and_q_font = pygame.font.Font('./Fonts/Cocogoose Pro Light-trial.ttf', 30)
+    restart_button = r_and_q_font.render('Space - Restart', True, (255, 255, 255))
+    quit_button = r_and_q_font.render('Q - Quit', True, (255, 255, 255))
+    screen_width = a_screen.get_width()
+    screen_height = a_screen.get_height()
+    a_screen.blit(title, (screen_width / 2 - title.get_width() / 2, screen_height / 2 - title.get_height()))
+    a_screen.blit(restart_button, (screen_width / 2 - restart_button.get_width() / 2, screen_height / 1.8 - restart_button.get_height()))
+    a_screen.blit(quit_button, (screen_width / 2 - quit_button.get_width() / 2, screen_height / 1.9 + quit_button.get_height() / 2))
     pygame.display.update()
-    pygame.time.wait(500)
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
-                exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_q:
+                    pygame.quit()
+                elif event.key == K_SPACE:
+                    pass
 
 
 def score_render(screen, score: int):
     score_font = pygame.font.SysFont('arial', 18)
     score_rendered = score_font.render(f'Score: {score}', True, (255, 255, 255))
     score_rect = score_rendered.get_rect()
-    score_rect.center = (600/2, 20)
+    score_rect.center = (600 / 2, 20)
     screen.blit(score_rendered, score_rect)
 
 
