@@ -22,6 +22,7 @@ def check_edges(a_snake):
 def main():
     pygame.init()
     game_screen = pygame.display.set_mode((600, 600))
+    game_screen.fill((0, 0, 0))
     pygame.display.set_caption("Snake Game")
     game_snake = snake.default_snake
     game_clock = pygame.time.Clock()
@@ -70,16 +71,16 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
                 if event.key == K_UP or event.key == K_w:
                     if a_snake.direction != DOWN:
                         a_snake.change_direction(UP)
-                elif event.key == K_DOWN or event.key == K_s:
+                if event.key == K_DOWN or event.key == K_s:
                     if a_snake.direction != UP:
                         a_snake.change_direction(DOWN)
-                elif event.key == K_LEFT or event.key == K_a:
+                if event.key == K_LEFT or event.key == K_a:
                     if a_snake.direction != RIGHT:
                         a_snake.change_direction(LEFT)
-                elif event.key == K_RIGHT or event.key == K_d:
+                if event.key == K_RIGHT or event.key == K_d:
                     if a_snake.direction != LEFT:
                         a_snake.change_direction(RIGHT)
-                elif event.key == K_ESCAPE:
+                if event.key == K_ESCAPE:
                     pass
                     # pause_screen()
 
@@ -113,7 +114,8 @@ def run(a_screen, a_snake: snake.snake, a_apple: apple.apple, clock):
 
         pygame.display.update()
 
-    game_over_screen(a_screen)
+    if game_over_screen(a_screen):
+        main()
 
 
 def game_over_screen(a_screen):
@@ -129,7 +131,8 @@ def game_over_screen(a_screen):
     a_screen.blit(restart_button, (screen_width / 2 - restart_button.get_width() / 2, screen_height / 1.8 - restart_button.get_height()))
     a_screen.blit(quit_button, (screen_width / 2 - quit_button.get_width() / 2, screen_height / 1.9 + quit_button.get_height() / 2))
     pygame.display.update()
-    while True:
+    over = True
+    while over:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -137,8 +140,10 @@ def game_over_screen(a_screen):
                 if event.key == K_q:
                     pygame.quit()
                 elif event.key == K_SPACE:
-                    pass
+                    over = False
+                    break
 
+    return True
 
 def score_render(screen, score: int):
     score_font = pygame.font.SysFont('arial', 18)
